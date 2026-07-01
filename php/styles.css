@@ -1,0 +1,41 @@
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body::before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.75));z-index:0;pointer-events:none}
+body>*{position:relative;z-index:1}
+body{background:#0e0e0e url("bridge.webp") center/cover fixed no-repeat;color:#fff;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.page{min-height:100vh;display:flex;justify-content:center}
+.col{width:100%;max-width:28rem;padding:2rem 1.25rem 4rem;display:flex;flex-direction:column;align-items:center}
+
+.pill{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.25);border-radius:9999px;padding:.375rem 1rem;font-size:11px;font-weight:600;letter-spacing:.18em}
+.pill .ico{width:14px;height:14px}
+
+.wordmark{margin:1.5rem 0 0;font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:2.25rem;letter-spacing:.15em;color:#E5B34B}
+
+.bonus{margin-top:1.25rem;width:100%;background:rgba(26,26,26,.85);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);border-radius:1rem;padding:1rem;box-shadow:0 25px 50px -12px rgba(0,0,0,.6)}
+.bonus-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.bonus-text{flex:1}
+.badge{display:inline-block;background:#000;border-radius:9999px;padding:.25rem .75rem;font-size:10px;font-weight:700;letter-spacing:.1em}
+.bonus-title{margin-top:.5rem;font-size:17px;font-weight:700;line-height:1.15}
+.bonus-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:.125rem}
+.timer{background:#C9A574;color:#000;border-radius:.375rem;padding:.5rem .75rem;font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums}
+
+.gifts{margin-top:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.gift{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.95);color:#000;border-radius:.75rem;padding:.5rem .625rem}
+.gift .thumb{width:28px;height:28px;border-radius:.375rem;background:#e5e5e5;flex-shrink:0}
+.gift .plus{width:14px;height:14px;flex-shrink:0}
+.gift span{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.headline{align-self:flex-start;margin:2rem 0 0;font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;font-size:44px;line-height:.95;letter-spacing:.01em}
+
+.proof{align-self:flex-start;margin-top:2rem;display:flex;align-items:flex-start;gap:.5rem}
+.proof .star{width:16px;height:16px;margin-top:2px;flex-shrink:0}
+.proof p{margin:0;font-size:14px;font-weight:600;line-height:1.35}
+
+.cta{margin-top:1.25rem;width:100%;background:#efeae1;color:#000;border:0;border-radius:1rem;padding:1rem;font-size:13px;font-weight:700;letter-spacing:.1em;box-shadow:0 10px 25px -5px rgba(0,0,0,.5);cursor:pointer;font-family:inherit;transition:background .15s}
+.cta:hover{background:#fff}
+.cta-sub{display:inline-flex;align-items:center;gap:.25rem;margin-top:.25rem}
+.cta-sub svg{width:14px;height:14px}
+
+.footer-note{align-self:flex-start;margin-top:1rem;display:flex;align-items:flex-start;gap:.5rem;color:rgba(255,255,255,.55)}
+.footer-note .clock{width:14px;height:14px;margin-top:2px;flex-shrink:0}
+.footer-note p{margin:0;font-size:11px;line-height:1.35}
