@@ -1,4 +1,16 @@
 <?php
+//  DEBUG-CODE (nach dem Test wieder entfernen!)
+file_put_contents(
+    'tiktok_sandbox_debug.log',
+    date('Y-m-d H:i:s') . " | " .
+    "GET: " . json_encode($_GET) . " | " .
+    "Referer: " . ($_SERVER['HTTP_REFERER'] ?? 'none') . " | " .
+    "User-Agent: " . ($_SERVER['HTTP_USER_AGENT'] ?? 'none') . " | " .
+    "Headers: " . json_encode(getallheaders()) . "\n",
+    FILE_APPEND
+);
+
+<?php
 class Oppsd
 {
     private string $endpoint;
