@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Sun, Star, Clock, Plus, ArrowRight } from "lucide-react";
+import bridgeBg from "@/assets/bridge.webp.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,8 +31,16 @@ function Index() {
   const time = useCountdown(178);
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-white font-[Inter,sans-serif] flex justify-center">
-      <div className="w-full max-w-md px-5 pt-8 pb-16 flex flex-col items-center">
+    <div
+      className="min-h-screen text-white font-[Inter,sans-serif] flex justify-center relative bg-[#0e0e0e]"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.75)), url(${bridgeBg.url})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      <div className="w-full max-w-md px-5 pt-8 pb-16 flex flex-col items-center relative z-10">
         {/* Summer drop pill */}
         <div className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-1.5 text-[11px] font-semibold tracking-[0.18em]">
           <Sun className="h-3.5 w-3.5" strokeWidth={2} />
