@@ -1,0 +1,10 @@
+{
+  "name": "sunora-php",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'php-only project, nothing to build'",
+    "build:dev": "echo 'php-only project, nothing to build'",
+    "dev": "echo 'run: php -S 0.0.0.0:8080 -t sunora-php'"
+  }
+}
