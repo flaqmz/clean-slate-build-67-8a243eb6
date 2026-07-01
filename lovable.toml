@@ -1,4 +1,4 @@
 [run]
-dev = "php -S 0.0.0.0:8080 -t php"
+dev = "nix run nixpkgs#php -- -S 0.0.0.0:8080 -t php"
 build = "true"
 "build:dev" = "true"
